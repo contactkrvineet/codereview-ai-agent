@@ -1,0 +1,36 @@
+# Render.com deployment config
+# Reference: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: codereview-agent
+    runtime: docker
+    plan: free                  # 750 hrs/month, sleeps after 15 min idle
+    region: oregon              # change to your preferred region
+    dockerfilePath: ./Dockerfile
+
+    # Health check so Render knows when the service is ready
+    healthCheckPath: /api/health
+
+    # Auto-deploy on git push to main
+    autoDeploy: true
+
+    envVars:
+      # REQUIRED: Set this in the Render dashboard, not here.
+      # Get a free key at https://aistudio.google.com/apikey
+      - key: GEMINI_API_KEY
+        sync: false
+
+      # Optional: raises GitHub rate limit from 60/hr to 5000/hr
+      - key: GITHUB_TOKEN
+        sync: false
+
+      # Defaults — override in dashboard if you want
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: LLM_MODEL
+        value: gemini-2.0-flash
+      - key: RATE_LIMIT_PER_HOUR
+        value: "10"
+      - key: RATE_LIMIT_PER_DAY
+        value: "50"
