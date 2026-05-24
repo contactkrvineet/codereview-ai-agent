@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import re
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
@@ -16,6 +17,8 @@ from .prompts import build_user_prompt, load_system_prompt
 
 
 SEVERITY_ORDER = {"low": 0, "medium": 1, "high": 2}
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -32,6 +35,7 @@ class ReviewResult:
     issues: List[ReviewIssue] = field(default_factory=list)
     files_reviewed: int = 0
     files_skipped: int = 0
+    skip_reasons: List[str] = field(default_factory=list)
 
     def filter_severity(self, min_severity: str) -> List[ReviewIssue]:
         threshold = SEVERITY_ORDER.get(min_severity, 0)
@@ -76,8 +80,9 @@ class CodeReviewAgent:
                 result.issues.extend(issues)
                 result.files_reviewed += 1
             except Exception as exc:
-                print(f"Warning: failed to review {file_diff.path}: {exc}")
+                log.error("Failed to review %s: %s", file_diff.path, exc, exc_info=True)
                 result.files_skipped += 1
+                result.skip_reasons.append(f"{file_diff.path}: {exc}")
 
         result.issues.sort(
             key=lambda i: (i.file, i.line, -SEVERITY_ORDER.get(i.severity, 0))
@@ -86,8 +91,11 @@ class CodeReviewAgent:
 
     def _review_file(self, file_diff: FileDiff) -> List[ReviewIssue]:
         user_prompt = build_user_prompt(file_diff)
-        response = self.llm.complete(self.system_prompt, user_prompt)
-        return self._parse_response(response.text, file_diff.path)
+        response = self.llm.complete(self.system_prompt, user_prompt, max_tokens=8192)
+        log.debug("LLM raw response for %s:\n%s", file_diff.path, response.text)
+        issues = self._parse_response(response.text, file_diff.path)
+        log.info("Reviewed %s — %d issue(s) found", file_diff.path, len(issues))
+        return issues
 
     @staticmethod
     def _parse_response(response_text: str, file_path: str) -> List[ReviewIssue]:

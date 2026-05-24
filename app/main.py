@@ -38,8 +38,12 @@ from .diff_fetcher import DiffFetchError, fetch_diff
 from .rate_limit import rate_limiter
 from .url_parser import InvalidURLError, parse_url
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger(__name__)
+# Keep third-party loggers quieter
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+logging.getLogger("watchfiles").setLevel(logging.WARNING)
 
 
 # ─── App lifespan (startup checks) ──────────────────────────────────────
@@ -94,6 +98,7 @@ class ReviewResponse(BaseModel):
     issues: List[ReviewIssueOut]
     files_reviewed: int
     files_skipped: int
+    skip_reasons: List[str]
     source_url: str
     platform: str
     ref_type: str
@@ -150,6 +155,7 @@ async def review(payload: ReviewRequest, request: Request):
             issues=[],
             files_reviewed=0,
             files_skipped=0,
+            skip_reasons=[],
             source_url=payload.url,
             platform=ref.platform,
             ref_type=ref.ref_type,
@@ -175,6 +181,7 @@ async def review(payload: ReviewRequest, request: Request):
         issues=[ReviewIssueOut.from_issue(i) for i in result.issues],
         files_reviewed=result.files_reviewed,
         files_skipped=result.files_skipped,
+        skip_reasons=result.skip_reasons,
         source_url=payload.url,
         platform=ref.platform,
         ref_type=ref.ref_type,

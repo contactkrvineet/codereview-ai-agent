@@ -84,7 +84,7 @@ class GeminiClient(LLMClient):
         export GEMINI_API_KEY=your_key_here
     """
 
-    def __init__(self, model: str = "gemini-2.0-flash", api_key: Optional[str] = None):
+    def __init__(self, model: str = "gemini-2.5-flash", api_key: Optional[str] = None):
         self.model = model
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
         if not self.api_key:
@@ -96,19 +96,37 @@ class GeminiClient(LLMClient):
             f"https://generativelanguage.googleapis.com/v1beta/models/"
             f"{self.model}:generateContent?key={self.api_key}"
         )
-        response = requests.post(
-            url,
-            json={
-                "system_instruction": {"parts": [{"text": system_prompt}]},
-                "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
-                "generationConfig": {
-                    "maxOutputTokens": max_tokens,
-                    "temperature": 0.2,
-                    "responseMimeType": "application/json",
-                },
+        payload = {
+            "system_instruction": {"parts": [{"text": system_prompt}]},
+            "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
+            "generationConfig": {
+                "maxOutputTokens": max_tokens,
+                "temperature": 0.2,
+                "responseMimeType": "application/json",
             },
-            timeout=60,
-        )
+        }
+        import time as _time
+        import logging as _logging
+        _log = _logging.getLogger(__name__)
+        response = None
+        for attempt in range(3):  # up to 3 attempts (2 retries on 429)
+            response = requests.post(url, json=payload, timeout=60)
+            if response.status_code == 429:
+                # Parse retryDelay from Gemini response body, else default to 65s
+                wait = 65
+                try:
+                    details = response.json().get("error", {}).get("details", [])
+                    for d in details:
+                        delay = d.get("retryDelay", "")
+                        if delay and delay.endswith("s"):
+                            wait = int(delay[:-1]) + 5
+                            break
+                except Exception:
+                    pass
+                _log.warning("Gemini 429 rate limit — waiting %ds before retry (attempt %d/3)", wait, attempt + 1)
+                _time.sleep(wait)
+                continue
+            break
         response.raise_for_status()
         data = response.json()
         text = data["candidates"][0]["content"]["parts"][0]["text"]

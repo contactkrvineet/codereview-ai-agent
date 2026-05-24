@@ -6,6 +6,10 @@ All branding lives here — to rename the product, change BRAND_NAME and you're 
 
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # ─── Branding ────────────────────────────────────────────────────────────
 BRAND_NAME = "CodeReview Agent"
 BRAND_TAGLINE = "AI-powered code review for Quality Engineering teams"
@@ -19,7 +23,7 @@ SOURCE_URL = "https://github.com/contactkrvineet/codereview-agent"
 #   - "gemini"  → Google Gemini (free tier ~1500 requests/day)
 #   - "groq"    → Groq (free tier, fast inference)
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
-LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.0-flash")
+LLM_MODEL = os.getenv("LLM_MODEL", "gemini-2.5-flash")
 LLM_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("LLM_API_KEY", "")
 
 # ─── Rate limiting ──────────────────────────────────────────────────────

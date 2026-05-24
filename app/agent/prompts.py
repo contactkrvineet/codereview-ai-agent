@@ -38,19 +38,17 @@ Return a JSON object with this exact structure:
     {{
       "line": <integer, line number in the new file>,
       "severity": "high" | "medium" | "low",
-      "category": "<short tag, e.g. 'naming', 'selector', 'assertion'>",
+      "category": "<short tag, e.g. 'naming', 'error-handling', 'security', 'magic-number'>",
       "message": "<one-sentence description of the issue and how to fix it>"
     }}
   ]
 }}
 
 Rules:
-- Only flag issues that violate the documented standards. Do not invent rules.
-- If the change looks clean, return {{"issues": []}}.
+- Flag every clear violation of the documented standards. Do not skip obvious issues.
+- If after careful review no standards are violated, return {{"issues": []}}.
 - Be specific about line numbers — use the line number from the diff annotation.
-- Keep messages concise and actionable. No fluff.
-- Severity guide:
-  * "high"   = correctness, security, or strong convention violations
-  * "medium" = maintainability or readability issues
-  * "low"    = nitpicks (style, formatting suggestions)
+- Do not add commentary outside the JSON.
+- Keep messages concise and actionable.
+- Severity guide: "high" = security/correctness/strong convention; "medium" = maintainability/readability; "low" = style nitpick.
 """

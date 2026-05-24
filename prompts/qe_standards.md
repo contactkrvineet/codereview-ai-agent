@@ -1,68 +1,91 @@
-# Team Coding Standards — Quality Engineering
+# Team Coding Standards
 
-> Customize this file with your team's specific conventions. The agent will flag violations of whatever you put here.
+> These standards apply to all code changes. Flag clear violations — do not stay silent when an issue is obvious.
 
-## 1. Test method naming
+---
 
-- Test methods must describe behavior, not implementation.
-- Format: `test<UnitOfWork>_<Condition>_<ExpectedResult>` OR `should_<expected>_when_<condition>`.
-- Bad: `test1()`, `testit()`, `testStuff()`, `loginTest()`
-- Good: `testLogin_withValidCredentials_redirectsToDashboard()`, `should_rejectLogin_when_passwordIsExpired()`
+## 1. Security
 
-## 2. Page Object Model patterns
+- **No hardcoded secrets.** API keys, passwords, tokens, and credentials must never appear in source code. Use environment variables or secret managers.
+- **No SQL string concatenation.** Always use parameterised queries / prepared statements.
+- **Validate all external input** at system boundaries (API endpoints, file uploads, CLI args).
+- **No `eval()` or dynamic code execution** with untrusted data.
+- **HTTPS only** for any hardcoded external URLs in production code.
 
-- Locators must be defined as private class fields, not inline in methods.
-- Each page method should return either `void`, `boolean`, or `<NextPage>` — never a raw WebElement.
-- Page classes must not contain assertions; assertions belong in test classes.
-- Constructor pattern: page classes accept `WebDriver` (or framework equivalent) in their constructor.
+---
 
-## 3. Selector preferences
+## 2. Error handling
 
-- **Preferred order:** `data-testid` > `id` > `name` > stable CSS > XPath (last resort).
-- Hardcoded absolute XPath like `/html/body/div[3]/form/input[2]` is forbidden — too brittle.
-- Class-only selectors like `By.className("btn")` are discouraged when more stable options exist.
+- **Do not swallow exceptions silently.** An empty `except:`, `catch {}`, or `rescue` block with no logging is always a violation.
+- **Log exceptions with context** — include the error message and enough info to reproduce.
+- Avoid bare `except Exception` in Python without re-raising or specific handling.
+- Functions that can fail must either return an error value, raise a typed exception, or document what they throw.
 
-## 4. Assertion patterns
+---
 
-- Every test method must have at least one explicit assertion.
-- Multi-step assertions should use soft assertions (`SoftAssert`, `Assertions.assertAll`) — fail at the end of the test, not on the first failure.
-- Assertion messages are required when comparing more than primitives. Use the third argument: `assertEquals(expected, actual, "Order total should match cart subtotal")`.
-- Don't use `assertTrue(x == y)` — use `assertEquals(y, x)` for better failure messages.
+## 3. Naming conventions
 
-## 5. Test data management
+- **Variables, functions, and methods** must use descriptive names. Single-letter names (`x`, `d`, `tmp`) are only acceptable as loop indices.
+- **Boolean variables/functions** should read as a predicate: `is_valid`, `has_permission`, `can_retry` — not `flag`, `check`, `result`.
+- **Constants** must be UPPER_SNAKE_CASE (Python/JS) or `static final` (Java).
+- **Functions must do one thing.** A function named `processData` that also sends emails and logs to a database violates single responsibility.
 
-- No hardcoded test data inline in test methods (URLs, usernames, passwords, account IDs).
-- Test data must come from: configuration files, test data factories, or external data providers.
-- Sensitive values (API keys, real credentials) must never be committed — use environment variables.
-- Use unique identifiers (UUIDs, timestamps) to prevent cross-test interference in parallel runs.
+---
 
-## 6. Magic numbers and strings
+## 4. Magic numbers and strings
 
-- Magic numbers (e.g., `Thread.sleep(5000)`, `if (count == 42)`) must be replaced with named constants.
-- Exception: `0`, `1`, `-1` are acceptable when their meaning is obvious from context.
-- `Thread.sleep()` itself is strongly discouraged — use explicit waits (`WebDriverWait`, `expected_conditions`) instead.
+- Magic numbers must be replaced with named constants. `sleep(5000)`, `if status == 42`, `range(100)` — all require a named constant or comment.
+- Exception: `0`, `1`, `-1`, `""`, `[]` are acceptable when meaning is obvious from immediate context.
+- Hardcoded URLs, paths, and timeouts in business logic must be constants or config values.
 
-## 7. Setup and teardown
+---
 
-- Use proper annotations (`@BeforeEach`, `@AfterEach`, `@BeforeAll`, `@AfterAll` in JUnit5; `@BeforeMethod`, `@AfterMethod` in TestNG).
-- Browser/driver instances must be cleaned up in teardown — no leaked sessions.
-- Heavy setup operations should be in `@BeforeAll`/`@BeforeClass`, not `@BeforeEach`.
+## 5. Code duplication
 
-## 8. Documentation
+- Identical or near-identical blocks of logic repeated 3+ times must be extracted into a shared function.
+- Copy-pasted code with minor variable changes is always a violation.
 
-- Public test methods should have a Javadoc/docstring describing what behavior is being verified.
-- Complex setup code should have inline comments explaining intent.
-- TODO/FIXME comments must include a ticket reference: `// TODO(JIRA-1234): description`.
+---
 
-## 9. Imports and structure
+## 6. Function and method design
 
-- No wildcard imports (`import java.util.*`). Use specific imports.
-- Unused imports must be removed.
-- Test classes should be in the same package structure as the code they test.
+- Functions must not exceed ~50 lines. Flag functions that are clearly doing too much.
+- **Avoid deeply nested logic** — more than 3 levels of nesting (if/for/try) is a violation. Prefer early returns.
+- Functions must not have more than 5 parameters. Use a config object/dataclass if more are needed.
+- **Avoid boolean parameters** that change function behaviour (`def process(data, is_dry_run=True)`) — split into two functions instead.
 
-## 10. BDD / Gherkin specifics (if applicable)
+---
 
-- Step definitions must be reusable — avoid creating new steps when an equivalent exists.
-- Feature files use scenario-level tags for test organization (`@smoke`, `@regression`, `@<module>`).
-- Background steps must apply to all scenarios in the feature, not be misused as test setup.
-- Avoid technical implementation details in feature files (CSS selectors, technical jargon).
+## 7. Test quality (applies to test files)
+
+- **Every test must have at least one explicit assertion.** A test with no assertion is not a test.
+- **Test names must describe behaviour:** `test_login_with_expired_password_returns_401`, not `test1` or `testLogin`.
+- **No hardcoded test data** (usernames, passwords, account IDs) inline — use fixtures, factories, or config.
+- `Thread.sleep()` / `time.sleep()` in tests is a violation — use explicit waits or retry logic.
+- Page Object classes must not contain assertions; assertions belong in test classes.
+- Hardcoded absolute XPath (`/html/body/div[3]/input`) is forbidden — use `data-testid`, `id`, or stable CSS.
+- Every test method must clean up after itself — no leaked state, open connections, or browser sessions.
+
+---
+
+## 8. Imports and dependencies
+
+- **No wildcard imports** (`import java.util.*`, `from module import *`).
+- **Unused imports must be removed.**
+- Do not import an entire library just to use one function — import only what you need.
+
+---
+
+## 9. Comments and documentation
+
+- `TODO` / `FIXME` comments must include a ticket or owner reference: `# TODO(JIRA-123): description`.
+- Comments must explain **why**, not **what**. `i += 1  # increment i` is not a useful comment.
+- Public functions/methods/classes should have a docstring or Javadoc if their purpose is non-obvious.
+
+---
+
+## 10. Resource management
+
+- File handles, DB connections, HTTP clients, and sockets must be closed after use. Use `with`/`try-finally`/`using` patterns.
+- Do not open connections at module import time — open them lazily or in a managed context.
+- Any resource opened in setup must be closed in teardown.

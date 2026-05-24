@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check no secrets in code
+        run: |
+          # Fail if any file (outside .env.example) contains what looks like a real API key
+          if grep -rn "AIzaSy" --include="*.py" --include="*.yml" --include="*.yaml" --include="*.json" .; then
+            echo "ERROR: Possible hardcoded API key found in source code."
+            exit 1
+          fi
+          echo "No hardcoded secrets detected."
+
+      - name: Syntax check
+        run: python -m py_compile app/main.py app/config.py app/agent/agent.py app/agent/llm_client.py app/agent/diff_parser.py app/agent/prompts.py
+
+      - name: Import sanity check
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python - << 'EOF'
+          import os, sys
+          sys.path.insert(0, '.')
+          from app.agent.agent import CodeReviewAgent
+          from app.agent.diff_parser import parse_diff
+          from app.agent.prompts import build_user_prompt, load_system_prompt
+          print("All imports OK")
+          EOF

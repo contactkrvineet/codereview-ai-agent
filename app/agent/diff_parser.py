@@ -7,6 +7,7 @@ the agent can reason about. Uses the `unidiff` library for robust parsing.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
@@ -14,13 +15,29 @@ from typing import List, Optional
 from unidiff import PatchSet
 
 
-# File extensions the agent will analyze. Add more as needed.
+# File extensions the agent will analyze.
+# Covers source code, config, templates, infra, and data files.
 DEFAULT_REVIEWABLE_EXTENSIONS = {
+    # Application code
     ".py", ".java", ".js", ".ts", ".jsx", ".tsx",
-    ".go", ".rb", ".rs", ".kt", ".scala",
+    ".go", ".rb", ".rs", ".kt", ".scala", ".cs", ".cpp", ".c", ".h",
+    ".swift", ".php", ".dart",
+    # Config / infra
+    ".yml", ".yaml", ".toml", ".ini", ".cfg", ".env",
+    ".json", ".xml",
+    # Web / templates
+    ".html", ".htm", ".css", ".scss", ".sass", ".less", ".jinja", ".jinja2",
+    # Shell / scripts
+    ".sh", ".bash", ".zsh", ".ps1", ".bat",
+    # Data / DB
+    ".sql", ".graphql", ".gql",
+    # Docs (only when they contain code-like content)
+    ".md", ".rst",
     # Test-specific
     ".feature",
 }
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -67,10 +84,13 @@ def parse_diff(diff_text: str, reviewable_extensions: Optional[set] = None) -> L
     for patched_file in patch_set:
         # Skip deleted files
         if patched_file.is_removed_file:
+            log.debug("Skipping deleted file: %s", patched_file.path)
             continue
 
+        ext = Path(patched_file.path).suffix.lower()
         # Skip files with unreviewable extensions
-        if Path(patched_file.path).suffix.lower() not in reviewable_extensions:
+        if ext not in reviewable_extensions:
+            log.warning("Skipping unrecognised extension '%s': %s", ext, patched_file.path)
             continue
 
         file_diff = FileDiff(
