@@ -569,6 +569,29 @@
       </header>
 
       <section class="form-section">
+        <!-- Wake-up banner (shown if server is cold-starting) -->
+        <div
+          id="wakeup-banner"
+          style="
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 12px 18px;
+            background: rgba(244, 185, 66, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--accent);
+          "
+        >
+          <span style="font-size: 18px; line-height: 1">☕</span>
+          <span
+            >Server is waking up from sleep — first load may take 30–60 seconds.
+            Please wait…</span
+          >
+        </div>
+
         <label class="form-label" for="url-input"
           >Pull request, merge request, or commit URL</label
         >
@@ -689,6 +712,38 @@
       const statusEl = document.getElementById("status");
       const resultsEl = document.getElementById("results");
       const sampleBtn = document.getElementById("sample-btn");
+      const wakeupBanner = document.getElementById("wakeup-banner");
+
+      // ─── Wake-up check on page load ───────────────────────────────
+      (async () => {
+        // Show banner after 2s if server hasn't responded yet
+        const showTimer = setTimeout(() => {
+          wakeupBanner.style.display = "flex";
+        }, 2000);
+
+        try {
+          const start = Date.now();
+          await fetch("/api/health", { cache: "no-store" });
+          clearTimeout(showTimer);
+          const elapsed = Date.now() - start;
+          // If it was slow (cold start), show briefly then fade out
+          if (elapsed > 2000) {
+            wakeupBanner.querySelector("span").textContent = "Server is ready!";
+            wakeupBanner.style.background = "rgba(22,163,74,0.12)";
+            wakeupBanner.style.borderColor = "#16a34a";
+            wakeupBanner.style.color = "#16a34a";
+            wakeupBanner.style.display = "flex";
+            setTimeout(() => {
+              wakeupBanner.style.display = "none";
+            }, 2500);
+          } else {
+            wakeupBanner.style.display = "none";
+          }
+        } catch {
+          clearTimeout(showTimer);
+          wakeupBanner.style.display = "none";
+        }
+      })();
 
       sampleBtn.addEventListener("click", () => {
         urlInput.value = SAMPLE_URL;
