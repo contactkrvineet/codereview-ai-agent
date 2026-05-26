@@ -16,7 +16,7 @@ BRAND_TAGLINE = "AI-powered code review for Quality Engineering teams"
 AUTHOR_NAME = "Vineet Kumar"
 AUTHOR_URL = "https://vineetkr.com"
 AUTHOR_LINKEDIN = "https://linkedin.com/in/vineet2311"
-SOURCE_URL = "https://github.com/contactkrvineet/codereview-agent"
+SOURCE_URL = "https://github.com/contactkrvineet/codereview-ai-agent"
 
 # ─── LLM Provider ───────────────────────────────────────────────────────
 # Free providers available in production:
