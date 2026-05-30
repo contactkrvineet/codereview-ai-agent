@@ -274,6 +274,108 @@
         color: var(--sev-high);
       }
 
+      /* ─── Demo video section ──────────────────────────────────── */
+      .video-demo-section {
+        margin: 26px 0 8px;
+      }
+      .video-demo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .video-demo-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+      .video-demo-enlarge {
+        border: 1px solid var(--border-strong);
+        background: var(--bg-elevated);
+        color: var(--text-secondary);
+        border-radius: 5px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        padding: 6px 10px;
+        transition:
+          border-color 0.15s ease,
+          color 0.15s ease;
+      }
+      .video-demo-enlarge:hover {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+      }
+      .video-demo-frame {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px;
+      }
+      .video-demo-player {
+        width: 100%;
+        max-height: 230px;
+        border-radius: 6px;
+        background: #000;
+        display: block;
+      }
+
+      .video-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.72);
+        padding: 20px;
+      }
+      .video-modal.visible {
+        display: flex;
+      }
+      .video-modal-content {
+        width: min(1020px, 100%);
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .video-modal-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        color: var(--text-tertiary);
+      }
+      .video-modal-close {
+        border: 1px solid var(--border-strong);
+        background: transparent;
+        color: var(--text-secondary);
+        border-radius: 4px;
+        padding: 3px 8px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .video-modal-close:hover {
+        color: var(--accent);
+        border-color: var(--accent-dim);
+      }
+      .video-modal-player {
+        width: 100%;
+        max-height: 78vh;
+        display: block;
+        background: #000;
+      }
+
       .spinner {
         display: inline-block;
         width: 10px;
@@ -452,6 +554,332 @@
         margin-bottom: 16px;
       }
 
+      /* ─── Demo (animated, auto-loop) ───────────────────────────── */
+      .demo-section {
+        margin-top: 88px;
+        padding-top: 48px;
+        border-top: 1px solid var(--border);
+      }
+      .demo-section h2 {
+        font-family: var(--font-display);
+        font-size: 32px;
+        font-weight: 400;
+        margin-bottom: 8px;
+        letter-spacing: -0.01em;
+      }
+      .demo-section h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .demo-section .demo-sub {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        font-size: 14px;
+      }
+
+      .demo-frame {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6);
+      }
+      .demo-chrome {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: #100d0a;
+        border-bottom: 1px solid var(--border);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-tertiary);
+        letter-spacing: 0.05em;
+      }
+      .demo-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #3d352b;
+      }
+      .demo-dot.r {
+        background: #e76f51;
+      }
+      .demo-dot.y {
+        background: #f4b942;
+      }
+      .demo-dot.g {
+        background: #16a34a;
+      }
+      .demo-url {
+        margin-left: 12px;
+        opacity: 0.7;
+      }
+      .demo-badge {
+        margin-left: auto;
+        padding: 2px 8px;
+        border: 1px solid var(--border-strong);
+        border-radius: 3px;
+        font-size: 10px;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+      }
+
+      .demo-body {
+        padding: 28px 28px 32px;
+        min-height: 420px;
+      }
+      .demo-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        margin-bottom: 10px;
+      }
+      .demo-input-wrap {
+        display: flex;
+        background: var(--bg-base);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .demo-input-wrap.focused {
+        border-color: var(--accent-dim);
+        box-shadow: 0 0 0 4px var(--accent-faint);
+      }
+      .demo-input {
+        flex: 1;
+        padding: 14px 18px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .demo-caret {
+        display: inline-block;
+        width: 7px;
+        height: 14px;
+        background: var(--accent);
+        margin-left: 2px;
+        vertical-align: -2px;
+        animation: blink 1s steps(2) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .demo-btn {
+        padding: 0 22px;
+        background: var(--accent);
+        color: #16a34a;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        transition:
+          transform 0.12s ease,
+          background 0.15s ease;
+      }
+      .demo-btn.pressed {
+        background: #f7c965;
+        transform: scale(0.96);
+      }
+
+      .demo-status {
+        margin-top: 18px;
+        padding: 12px 16px;
+        background: var(--bg-base);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-secondary);
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+      .demo-status.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .demo-status .spinner {
+        background: var(--accent);
+      }
+
+      .demo-results {
+        margin-top: 22px;
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.4s ease,
+          transform 0.4s ease;
+      }
+      .demo-results.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .demo-results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-bottom: 12px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        font-family: var(--font-display);
+        font-size: 18px;
+      }
+      .demo-results-header em {
+        color: var(--accent);
+        font-style: italic;
+      }
+      .demo-results-header .badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-tertiary);
+        letter-spacing: 0.05em;
+      }
+      .demo-file {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-primary);
+        padding: 6px 12px;
+        background: var(--bg-base);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        margin-bottom: 8px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .demo-file .acc {
+        color: var(--accent);
+      }
+      .demo-file .count {
+        margin-left: auto;
+        color: var(--text-tertiary);
+        font-size: 10px;
+        letter-spacing: 0.05em;
+      }
+      .demo-issue {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        gap: 14px;
+        padding: 12px 16px;
+        margin-bottom: 6px;
+        background: var(--bg-base);
+        border: 1px solid var(--border);
+        border-left-width: 3px;
+        border-radius: 4px;
+        align-items: start;
+        opacity: 0;
+        transform: translateX(-6px);
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+      .demo-issue.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .demo-issue.high {
+        border-left-color: var(--sev-high);
+      }
+      .demo-issue.medium {
+        border-left-color: var(--sev-medium);
+      }
+      .demo-sev {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 2px 7px;
+        border-radius: 3px;
+      }
+      .demo-issue.high .demo-sev {
+        color: var(--sev-high);
+        background: var(--sev-high-bg);
+      }
+      .demo-issue.medium .demo-sev {
+        color: var(--sev-medium);
+        background: var(--sev-medium-bg);
+      }
+      .demo-issue .ln {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
+      .demo-issue .msg {
+        font-size: 13px;
+        color: var(--text-primary);
+        line-height: 1.5;
+      }
+      .demo-issue .cat {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-tertiary);
+        letter-spacing: 0.05em;
+        margin-top: 4px;
+        display: block;
+      }
+
+      .demo-controls {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 14px;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
+      .demo-replay {
+        background: transparent;
+        border: 1px solid var(--border-strong);
+        color: var(--text-secondary);
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.05em;
+        transition:
+          border-color 0.15s ease,
+          color 0.15s ease;
+      }
+      .demo-replay:hover {
+        border-color: var(--accent-dim);
+        color: var(--accent);
+      }
+
+      @media (max-width: 600px) {
+        .demo-body {
+          padding: 20px;
+          min-height: 460px;
+        }
+        .demo-input-wrap {
+          flex-direction: column;
+        }
+        .demo-btn {
+          padding: 12px;
+          justify-content: center;
+        }
+        .demo-issue {
+          grid-template-columns: auto 1fr;
+        }
+        .demo-issue .ln {
+          grid-column: 2;
+        }
+      }
+
       /* ─── About / Footer ───────────────────────────────────────── */
       .about {
         margin-top: 96px;
@@ -557,10 +985,8 @@
           Built by {{ author_name }} · v0.1
         </div>
         <h1>
-          {{ brand_name.split(' ')[0] }}
-          <em
-            >{{ brand_name.split(' ', 1)[1] if ' ' in brand_name else '' }}</em
-          >
+          {{ brand_first }} {% if brand_rest %}<em>{{ brand_rest }}</em>{% endif
+          %}
         </h1>
         <p class="tagline">
           {{ tagline }}. Paste a GitHub or GitLab URL — get AI-flagged style and
@@ -628,10 +1054,159 @@
           >
         </div>
 
+        <section class="video-demo-section" aria-label="Product demo video">
+          <div class="video-demo-header">
+            <div class="video-demo-title">Quick walkthrough</div>
+            <button
+              type="button"
+              class="video-demo-enlarge"
+              id="enlarge-demo-btn"
+            >
+              Enlarge
+            </button>
+          </div>
+          <div class="video-demo-frame">
+            <video
+              id="inline-demo-video"
+              class="video-demo-player"
+              src="/static/demo.mov"
+              controls
+              preload="metadata"
+              playsinline
+            ></video>
+          </div>
+        </section>
+
         <div class="status" id="status"></div>
       </section>
 
+      <div class="video-modal" id="video-modal" aria-hidden="true">
+        <div
+          class="video-modal-content"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Demo video player"
+        >
+          <div class="video-modal-topbar">
+            <span>Demo walkthrough</span>
+            <button
+              type="button"
+              class="video-modal-close"
+              id="close-video-modal"
+            >
+              Close
+            </button>
+          </div>
+          <video
+            id="modal-demo-video"
+            class="video-modal-player"
+            src="/static/demo.mov"
+            controls
+            preload="metadata"
+          ></video>
+        </div>
+      </div>
+
       <section class="results" id="results"></section>
+
+      <section class="demo-section" id="demo-section" aria-label="Demo">
+        <h2>See it <em>in action</em></h2>
+        <p class="demo-sub">
+          A 15-second walkthrough — paste a pull request URL, the agent fetches
+          the diff, runs it through the LLM against your standards, and returns
+          structured findings.
+        </p>
+
+        <div class="demo-frame">
+          <div class="demo-chrome">
+            <span class="demo-dot r"></span>
+            <span class="demo-dot y"></span>
+            <span class="demo-dot g"></span>
+            <span class="demo-url"
+              >{{ brand_name | lower | replace(' ', '-') }}.app</span
+            >
+            <span class="demo-badge">DEMO</span>
+          </div>
+
+          <div class="demo-body">
+            <div class="demo-label">Pull request URL</div>
+            <div class="demo-input-wrap" id="demoInputWrap">
+              <div class="demo-input">
+                <span id="demoTyped"></span
+                ><span class="demo-caret" id="demoCaret"></span>
+              </div>
+              <div class="demo-btn" id="demoBtn">Review →</div>
+            </div>
+
+            <div class="demo-status" id="demoStatus">
+              <span class="spinner"></span
+              ><span id="demoStatusText">Fetching diff from github.com…</span>
+            </div>
+
+            <div class="demo-results" id="demoResults">
+              <div class="demo-results-header">
+                <div>17 issue(s) found <em>(7 high, 10 medium)</em></div>
+                <div class="badge">github · pr</div>
+              </div>
+              <div class="demo-file">
+                <span class="acc">▸</span>
+                <span>tests/test_violations_sample.py</span>
+                <span class="count">17 ISSUES</span>
+              </div>
+              <div class="demo-issue high" data-i="0">
+                <span class="demo-sev">High</span>
+                <span class="ln">line 11</span>
+                <div>
+                  <div class="msg">
+                    Hardcoded API keys must be replaced with environment
+                    variables or a secret manager.
+                  </div>
+                  <span class="cat">security · secrets</span>
+                </div>
+              </div>
+              <div class="demo-issue medium" data-i="1">
+                <span class="demo-sev">Medium</span>
+                <span class="ln">line 24</span>
+                <div>
+                  <div class="msg">
+                    Use <code>pytest.fixture</code> instead of setUp/tearDown
+                    for test setup consistency.
+                  </div>
+                  <span class="cat">framework · pytest</span>
+                </div>
+              </div>
+              <div class="demo-issue high" data-i="2">
+                <span class="demo-sev">High</span>
+                <span class="ln">line 38</span>
+                <div>
+                  <div class="msg">
+                    Bare <code>except:</code> swallows real errors — catch a
+                    specific exception type.
+                  </div>
+                  <span class="cat">style · error-handling</span>
+                </div>
+              </div>
+              <div class="demo-issue medium" data-i="3">
+                <span class="demo-sev">Medium</span>
+                <span class="ln">line 52</span>
+                <div>
+                  <div class="msg">
+                    Avoid <code>time.sleep()</code> in tests — use explicit
+                    waits or mocks for deterministic runs.
+                  </div>
+                  <span class="cat">convention · flakiness</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-controls">
+              <button type="button" class="demo-replay" id="demoReplay">
+                ↻ Replay
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section class="about">
         <h2>What this is</h2>
@@ -713,6 +1288,11 @@
       const resultsEl = document.getElementById("results");
       const sampleBtn = document.getElementById("sample-btn");
       const wakeupBanner = document.getElementById("wakeup-banner");
+      const enlargeDemoBtn = document.getElementById("enlarge-demo-btn");
+      const videoModal = document.getElementById("video-modal");
+      const closeVideoModalBtn = document.getElementById("close-video-modal");
+      const inlineDemoVideo = document.getElementById("inline-demo-video");
+      const modalDemoVideo = document.getElementById("modal-demo-video");
 
       // ─── Wake-up check on page load ───────────────────────────────
       (async () => {
@@ -748,6 +1328,37 @@
       sampleBtn.addEventListener("click", () => {
         urlInput.value = SAMPLE_URL;
         urlInput.focus();
+      });
+
+      function openVideoModal() {
+        videoModal.classList.add("visible");
+        videoModal.setAttribute("aria-hidden", "false");
+        if (!inlineDemoVideo.paused) {
+          modalDemoVideo.currentTime = inlineDemoVideo.currentTime;
+          inlineDemoVideo.pause();
+        }
+      }
+
+      function closeVideoModal() {
+        videoModal.classList.remove("visible");
+        videoModal.setAttribute("aria-hidden", "true");
+        modalDemoVideo.pause();
+      }
+
+      enlargeDemoBtn.addEventListener("click", openVideoModal);
+      closeVideoModalBtn.addEventListener("click", closeVideoModal);
+
+      videoModal.addEventListener("click", (event) => {
+        if (event.target === videoModal) closeVideoModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          videoModal.classList.contains("visible")
+        ) {
+          closeVideoModal();
+        }
       });
 
       function setStatus(message, isError = false) {
@@ -832,6 +1443,119 @@
         resultsEl.classList.add("visible");
         resultsEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+
+      // ─── Animated demo (auto-loop, replays whenever in view) ─────
+      (function setupDemo() {
+        const DEMO_URL =
+          "https://github.com/contactkrvineet/codereview-ai-agent/pull/1";
+        const typedEl = document.getElementById("demoTyped");
+        const caretEl = document.getElementById("demoCaret");
+        const wrapEl = document.getElementById("demoInputWrap");
+        const btnEl = document.getElementById("demoBtn");
+        const statusEl = document.getElementById("demoStatus");
+        const statusText = document.getElementById("demoStatusText");
+        const resultsEl = document.getElementById("demoResults");
+        const issues = resultsEl.querySelectorAll(".demo-issue");
+        const replayBtn = document.getElementById("demoReplay");
+        const section = document.getElementById("demo-section");
+
+        let timers = [];
+        let playing = false;
+
+        function reset() {
+          timers.forEach(clearTimeout);
+          timers = [];
+          typedEl.textContent = "";
+          caretEl.style.display = "inline-block";
+          wrapEl.classList.remove("focused");
+          btnEl.classList.remove("pressed");
+          statusEl.classList.remove("visible");
+          resultsEl.classList.remove("visible");
+          issues.forEach((el) => el.classList.remove("show"));
+        }
+
+        function schedule(fn, delay) {
+          const id = setTimeout(fn, delay);
+          timers.push(id);
+        }
+
+        function play() {
+          if (playing) return;
+          playing = true;
+          reset();
+
+          // 1. focus input
+          schedule(() => wrapEl.classList.add("focused"), 400);
+
+          // 2. type URL char by char
+          const startType = 700;
+          const perChar = 38;
+          for (let i = 1; i <= DEMO_URL.length; i++) {
+            schedule(
+              () => {
+                typedEl.textContent = DEMO_URL.slice(0, i);
+              },
+              startType + i * perChar,
+            );
+          }
+          const afterType = startType + DEMO_URL.length * perChar;
+
+          // 3. click button
+          schedule(() => {
+            btnEl.classList.add("pressed");
+            caretEl.style.display = "none";
+          }, afterType + 500);
+          schedule(() => btnEl.classList.remove("pressed"), afterType + 700);
+
+          // 4. status: fetching
+          schedule(() => {
+            statusText.textContent = "Fetching diff from github.com…";
+            statusEl.classList.add("visible");
+          }, afterType + 850);
+
+          // 5. status: LLM
+          schedule(() => {
+            statusText.textContent = "Sending diff to LLM for review…";
+          }, afterType + 2400);
+
+          // 6. results appear
+          schedule(() => {
+            statusEl.classList.remove("visible");
+            resultsEl.classList.add("visible");
+          }, afterType + 4200);
+
+          // 7. issues stagger in
+          issues.forEach((el, idx) => {
+            schedule(
+              () => el.classList.add("show"),
+              afterType + 4400 + idx * 350,
+            );
+          });
+
+          // 8. hold, then loop
+          const total = afterType + 4400 + issues.length * 350 + 5500;
+          schedule(() => {
+            playing = false;
+            play();
+          }, total);
+        }
+
+        replayBtn.addEventListener("click", () => {
+          playing = false;
+          play();
+        });
+
+        // Only start when scrolled into view (saves CPU on long pages)
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting && !playing) play();
+            });
+          },
+          { threshold: 0.25 },
+        );
+        io.observe(section);
+      })();
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();

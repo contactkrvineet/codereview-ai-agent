@@ -107,11 +107,14 @@ class ReviewResponse(BaseModel):
 # ─── Routes ─────────────────────────────────────────────────────────────
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
+    brand_first, _, brand_rest = BRAND_NAME.partition(" ")
     return templates.TemplateResponse(
         request,
         "index.html",
         {
             "brand_name": BRAND_NAME,
+            "brand_first": brand_first,
+            "brand_rest": brand_rest,
             "tagline": BRAND_TAGLINE,
             "author_name": AUTHOR_NAME,
             "author_url": AUTHOR_URL,
