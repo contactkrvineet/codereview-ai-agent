@@ -32,6 +32,7 @@ Built as an open-source illustration of a pattern adopted in production at regul
 **This is Phase 1.** Public repositories only. No authentication required from users.
 
 **Phase 2 (planned)** will add:
+
 - OAuth via GitHub and GitLab for private repo support
 - Caching layer (Redis) to avoid re-reviewing identical diffs
 - Per-user quotas instead of per-IP rate limits
@@ -94,6 +95,16 @@ Render.com has a generous free tier perfect for a portfolio demo (750 hrs/month,
 - Service sleeps after 15 min of inactivity → first request after sleep takes ~30 seconds (cold start)
 - For demos: works fine. Visitors will see "Fetching diff..." then "Sending to LLM..." which masks the cold start.
 - For production traffic: upgrade to Render's Starter plan ($7/month) for always-on service.
+
+### Optional keep-alive setup
+
+If you want to reduce cold starts on the free tier, you can add a scheduled GitHub Actions ping:
+
+1. Add a repository secret named `RENDER_KEEPALIVE_URL` with your Render base URL, for example `https://codereview-agent.onrender.com`.
+2. Keep the included workflow at [.github/workflows/render-keepalive.yml](.github/workflows/render-keepalive.yml) enabled.
+3. The workflow will call `/api/health` every 10 minutes.
+
+This helps keep the instance warm, but it does not guarantee 24/7 uptime on the free plan.
 
 ---
 
@@ -176,17 +187,17 @@ codereview-agent-web/
 
 All branding and behavior is in `app/config.py`:
 
-| Variable | Default | Purpose |
-|---|---|---|
-| `BRAND_NAME` | "CodeReview Agent" | Product name shown in UI |
-| `BRAND_TAGLINE` | "AI-powered code review..." | Subtitle on landing page |
-| `AUTHOR_NAME` | "Vineet Kumar" | Attribution in footer |
-| `LLM_PROVIDER` | `gemini` | Which LLM to use (`gemini`/`ollama`/`openai`/`claude`) |
-| `LLM_MODEL` | `gemini-2.0-flash` | Specific model |
-| `RATE_LIMIT_PER_HOUR` | `10` | Reviews per IP per hour |
-| `RATE_LIMIT_PER_DAY` | `50` | Reviews per IP per day |
-| `MAX_DIFF_BYTES` | `200000` | Reject diffs larger than 200 KB |
-| `MAX_FILES_PER_REVIEW` | `20` | Cap files per review (cost control) |
+| Variable               | Default                     | Purpose                                                |
+| ---------------------- | --------------------------- | ------------------------------------------------------ |
+| `BRAND_NAME`           | "CodeReview Agent"          | Product name shown in UI                               |
+| `BRAND_TAGLINE`        | "AI-powered code review..." | Subtitle on landing page                               |
+| `AUTHOR_NAME`          | "Vineet Kumar"              | Attribution in footer                                  |
+| `LLM_PROVIDER`         | `gemini`                    | Which LLM to use (`gemini`/`ollama`/`openai`/`claude`) |
+| `LLM_MODEL`            | `gemini-2.0-flash`          | Specific model                                         |
+| `RATE_LIMIT_PER_HOUR`  | `10`                        | Reviews per IP per hour                                |
+| `RATE_LIMIT_PER_DAY`   | `50`                        | Reviews per IP per day                                 |
+| `MAX_DIFF_BYTES`       | `200000`                    | Reject diffs larger than 200 KB                        |
+| `MAX_FILES_PER_REVIEW` | `20`                        | Cap files per review (cost control)                    |
 
 To customize the coding standards your agent reviews against, edit `prompts/qe_standards.md`.
 
