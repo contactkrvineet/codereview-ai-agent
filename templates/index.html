@@ -174,14 +174,17 @@
         display: flex;
         gap: 0;
         background: var(--bg-elevated);
-        border: 1px solid var(--border);
+        border: 1px solid rgba(22, 163, 74, 0.55);
         border-radius: 8px;
         overflow: hidden;
-        transition: border-color 0.2s ease;
+        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.08);
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
       }
       .input-wrapper:focus-within {
-        border-color: var(--accent-dim);
-        box-shadow: 0 0 0 4px var(--accent-faint);
+        border-color: #16a34a;
+        box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.16);
       }
 
       input[type="url"] {
@@ -981,7 +984,7 @@
   <body>
     <main>
       <header class="header">
-        <div class="eyebrow" style="color: #16a34a; font-size: 16px">
+        <div class="eyebrow" style="color: #16a34a; font-size: 20px">
           Built by {{ author_name }} · v0.1
         </div>
         <h1>
@@ -990,7 +993,9 @@
         </h1>
         <p class="tagline">
           {{ tagline }}. Paste a GitHub or GitLab URL — get AI-flagged style and
-          convention violations in seconds.
+          convention violations in seconds. If your GitLab URL needs
+          authentication, use a public GitHub repository URL (or an NPM package
+          repository link), or download the source code and review it locally.
         </p>
       </header>
 
@@ -1018,7 +1023,7 @@
           >
         </div>
 
-        <label class="form-label" for="url-input"
+        <label class="form-label" for="url-input" style="color: #16a34a"
           >Pull request, merge request, or commit URL</label
         >
         <form id="review-form">
